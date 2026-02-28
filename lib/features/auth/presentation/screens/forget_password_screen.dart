@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/core/constants/app_assets.dart';
+import 'package:to_do_app/features/auth/presentation/view_models/auth_view_model.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 
@@ -12,8 +13,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final _authViewModel = AuthViewModel();
+  final _emailFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -21,12 +25,47 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  void _sendResetLink() {
+  Future<void> _sendResetLink() async {
     if (_formKey.currentState?.validate() != true) return;
-    final email = _emailController.text.trim();
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Reset link sent to: $email')));
+
+    setState(() => _isLoading = true);
+    try {
+      await _authViewModel.resetPassword(_emailController.text.trim());
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Password reset email sent ✅"),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+          ),
+          elevation: 4,
+        ),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+          ),
+          elevation: 4,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -113,10 +152,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: _sendResetLink,
-                                  child: const Text(
-                                    'SEND LINK',
-                                    style: AppTextStyles.button,
-                                  ),
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          height: 22,
+                                          width: 22,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : const Text(
+                                          'SEND LINK',
+                                          style: AppTextStyles.button,
+                                        ),
                                 ),
                               ),
                               const SizedBox(height: 14),

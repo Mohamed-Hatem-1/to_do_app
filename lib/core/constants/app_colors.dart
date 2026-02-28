@@ -4,7 +4,7 @@ class AppColors {
   AppColors._();
 
   static const Color primary = Color(0xFFE83E8C);
-  static const Color background = Color(0xFFF7F3F5);
+  static const Color background = Colors.white;
 
   static const Color border = Color(0xFFD9D9D9);
   static const Color hint = Color(0xFFB9B9B9);

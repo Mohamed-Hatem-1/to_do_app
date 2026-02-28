@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:to_do_app/core/constants/app_assets.dart';
 import 'package:to_do_app/features/auth/presentation/screens/forget_password_screen.dart';
 import 'package:to_do_app/features/auth/presentation/screens/signup_screen.dart';
+import 'package:to_do_app/features/auth/presentation/view_models/auth_view_model.dart';
+import 'package:to_do_app/features/home/presentation/screens/home_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 
@@ -14,10 +16,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _authViewModel = AuthViewModel();
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -141,16 +145,79 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 54,
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState?.validate() != true) return;
-                                    final email = _emailController.text.trim();
-                                    final password = _passwordController.text;
-                                    debugPrint('SIGN IN: $email / $password');
+                                  onPressed: () async {
+                                    if (_formKey.currentState?.validate() !=
+                                        true)
+                                      return;
+                                    setState(() => _isLoading = true);
+                                    try {
+                                      await _authViewModel.signIn(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text
+                                            .trim(),
+                                      );
+                                      if (!mounted) return;
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          backgroundColor: Colors.green,
+                                          behavior: SnackBarBehavior.floating,
+                                          margin: EdgeInsets.all(16),
+                                          padding: EdgeInsets.all(16),
+                                          duration: Duration(seconds: 1),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(16),
+                                            ),
+                                          ),
+                                          elevation: 4,
+                                          content: Text("Login successful"),
+                                        ),
+                                      );
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        HomeScreen.routeName,
+                                        (route) => false,
+                                      );
+                                    } catch (e) {
+                                      if (!mounted) return;
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(e.toString()),
+                                          backgroundColor: Colors.red,
+                                          behavior: SnackBarBehavior.floating,
+                                          margin: const EdgeInsets.all(16),
+                                          padding: const EdgeInsets.all(16),
+                                          duration: const Duration(seconds: 2),
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(16),
+                                            ),
+                                          ),
+                                          elevation: 4,
+                                        ),
+                                      );
+                                    } finally {
+                                      if (mounted)
+                                        setState(() => _isLoading = false);
+                                    }
                                   },
-                                  child: const Text(
-                                    'SIGN IN',
-                                    style: AppTextStyles.button,
-                                  ),
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          height: 22,
+                                          width: 22,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : const Text(
+                                          'SIGN IN',
+                                          style: AppTextStyles.button,
+                                        ),
                                 ),
                               ),
                               const SizedBox(height: 16),
