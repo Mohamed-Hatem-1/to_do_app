@@ -1,0 +1,22 @@
+{
+  "@@locale": "en",
+  "name": "Name",
+  "appTitle": "To Do App",
+  "signIn": "SIGN IN",
+  "signUp": "Sign Up",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "forgotPassword": "Forgot Password?",
+  "dontHaveAccount": "Don't have an account?",
+  "haveAccount": "Have an account?",
+  "changeLanguage": "Language",
+  "hello": "Hello, {name}",
+  "@hello": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "changeName": "Change Name",
+  "changePassword": "Change Password"
+}

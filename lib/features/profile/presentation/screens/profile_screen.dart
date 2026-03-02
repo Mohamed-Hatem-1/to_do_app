@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:to_do_app/features/profile/presentation/screens/change_name_screen.dart';
+import 'package:to_do_app/features/profile/presentation/screens/change_password_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../auth/presentation/view_models/auth_view_model.dart';
 
@@ -11,7 +12,6 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authViewModel = AuthViewModel();
     return Scaffold(
-      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
@@ -31,18 +31,25 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 64),
-              _SettingRow(title: 'Name', onTap: () {}),
-              _SettingRow(title: 'Change Password', onTap: () {}),
+              _SettingRow(
+                title: 'Change Name',
+                onTap: () {
+                  Navigator.pushNamed(context, ChangeNameScreen.routeName);
+                },
+              ),
+              _SettingRow(
+                title: 'Change Password',
+                onTap: () {
+                  Navigator.pushNamed(context, ChangePasswordScreen.routeName);
+                },
+              ),
               _SettingRow(title: 'Change Language', onTap: () {}),
               const SizedBox(height: 18),
               TextButton(
                 onPressed: () async {
                   await authViewModel.signOut();
                   if (!context.mounted) return;
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (_) => const LoginScreen()),
-                    (route) => false,
-                  );
+                  Navigator.popUntil(context, (route) => route.isFirst);
                 },
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,

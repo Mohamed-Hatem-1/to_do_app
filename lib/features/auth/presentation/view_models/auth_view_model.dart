@@ -5,6 +5,7 @@ class AuthViewModel {
 
   // Sign Up
   Future<User?> signUp({
+    required String name,
     required String email,
     required String password,
   }) async {
@@ -13,9 +14,11 @@ class AuthViewModel {
         email: email,
         password: password,
       );
-      return credential.user;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.message);
+      await credential.user?.updateDisplayName(name);
+      await credential.user?.reload();
+      return _auth.currentUser;
+    } on FirebaseAuthException  {
+      rethrow;
     }
   }
 
@@ -30,8 +33,8 @@ class AuthViewModel {
         password: password,
       );
       return credential.user;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.message);
+    } on FirebaseAuthException {
+      rethrow;
     }
   }
 
@@ -40,6 +43,9 @@ class AuthViewModel {
     try {
       await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw Exception('No user found for that email.');
+      }
       throw Exception(e.message);
     }
   }

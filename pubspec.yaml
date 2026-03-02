@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   cupertino_icons: ^1.0.8
   firebase_core: ^4.4.0
   firebase_auth: ^6.1.4
@@ -29,15 +32,16 @@ flutter_launcher_icons:
 
 flutter_native_splash:
   color: "#0F172A"
-  image: assets/logo.png
+  background_image: assets/splash.png
   android_12:
-    color: "#0F172A"
-    image: assets/logo.png
+    background_image: assets/splash.png
   fullscreen: true
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/logo.png
+    - assets/splash.png
     - assets/app_icon.png
     - assets/images/
