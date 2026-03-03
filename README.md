@@ -57,13 +57,13 @@ Includes **Authentication**, **real-time tasks**, **Dark Mode**, and **Localizat
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="assets/screens/screen1.jpeg" width="width="220""/>
+  <img src="assets/screens/screen1.jpeg" width="220"/>
   <img src="assets/screens/screen2.jpeg" width="220"/>
   <img src="assets/screens/screen3.jpeg" width="220"/>
+  <img src="assets/screens/screen4.jpeg" width="220"/>
 </p>
 
 <p align="center">
-  <img src="assets/screens/screen4.jpeg" width="220"/>
   <img src="assets/screens/screen5.jpeg" width="220"/>
   <img src="assets/screens/screen6.jpeg" width="220"/>
 </p>
