@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     MyApp.themeController.removeListener(_themeListener);
+    MyApp.localeController.removeListener(_localeListener);
     super.dispose();
   }
 

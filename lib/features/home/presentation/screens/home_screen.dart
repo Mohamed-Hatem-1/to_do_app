@@ -38,19 +38,16 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        leading: Image.asset('assets/app_icon.png'),
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu_rounded),
-              iconSize: 28,
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            ),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu_rounded),
+            iconSize: 28,
+            onPressed: () => Scaffold.of(context).openDrawer(),
           ),
-        ],
+        ),
+        actions: [Image.asset('assets/app_icon.png')],
         title: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance
-              .userChanges(),
+          stream: FirebaseAuth.instance.userChanges(),
           builder: (context, snapshot) {
             final user = snapshot.data ?? FirebaseAuth.instance.currentUser;
 
@@ -136,7 +133,6 @@ class HomeScreen extends StatelessWidget {
                                   buildDeleteDialog(context, () async {
                                     await repo.deleteTask(task.id);
                                     if (!context.mounted) return;
-                                    Navigator.pop(context);
                                   }),
                             );
                           },

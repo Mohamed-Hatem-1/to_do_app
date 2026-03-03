@@ -19,9 +19,16 @@ class TaskScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           actions: [
-            StreamBuilder<TaskModel>(
+            StreamBuilder<TaskModel?>(
               stream: repo.watchTaskById(task.id),
               builder: (context, snapshot) {
+                final docDeleted =
+                    snapshot.hasData &&
+                    snapshot.data!.title.isEmpty &&
+                    snapshot.data!.createdAt.millisecondsSinceEpoch == 0;
+                if (docDeleted) {
+                  return const Center(child: Text('Task was deleted.'));
+                }
                 final currentTask = snapshot.data ?? task;
                 return Row(
                   children: [
@@ -42,11 +49,10 @@ class TaskScreen extends StatelessWidget {
                       onPressed: () async {
                         await showDialog(
                           context: context,
-                          builder: (_) => buildDeleteDialog(context, () async {
-                            await repo.deleteTask(currentTask.id);
-                            if (!context.mounted) return;
-                            Navigator.pop(context);
-                          }),
+                          builder: (dialogCtx) =>
+                              buildDeleteDialog(dialogCtx, () async {
+                                await repo.deleteTask(currentTask.id);
+                              }),
                         );
                       },
                     ),
@@ -56,7 +62,7 @@ class TaskScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: StreamBuilder<TaskModel>(
+        body: StreamBuilder<TaskModel?>(
           stream: repo.watchTaskById(task.id),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -65,7 +71,15 @@ class TaskScreen extends StatelessWidget {
             if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             }
-            final t = snapshot.data ?? task;
+            final t = snapshot.data;
+            if (t == null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted && Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
+              });
+              return const SizedBox.shrink();
+            }
             return Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
@@ -99,4 +113,3 @@ class TaskScreen extends StatelessWidget {
     );
   }
 }
-

@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import '../models/task_model.dart';
 
 class TasksRepo {
   final _db = FirebaseFirestore.instance;
-  final auth = FirebaseAuth.instance;
   final String uid;
 
   TasksRepo({required this.uid});
@@ -20,11 +17,13 @@ class TasksRepo {
         .map((snapshot) => snapshot.docs.map(TaskModel.fromDoc).toList());
   }
 
-  Stream<TaskModel> watchTaskById(String taskId) {
-    return _tasksRef
-        .doc(taskId)
-        .snapshots()
-        .map((doc) => TaskModel.fromDoc(doc));
+  Stream<TaskModel?> watchTaskById(String taskId) {
+    return _tasksRef.doc(taskId).snapshots().map((doc) {
+      if (!doc.exists) return null;
+      final data = doc.data();
+      if (data == null) return null;
+      return TaskModel.fromDoc(doc);
+    });
   }
 
   Future<void> addTask({
@@ -43,10 +42,6 @@ class TasksRepo {
 
   Future<void> deleteTask(String taskId) async {
     await _tasksRef.doc(taskId).delete();
-  }
-
-  Future<void> toggleDone(TaskModel task) async {
-    await _tasksRef.doc(task.id).update({'isDone': !task.isDone});
   }
 
   Future<void> updateTask({
