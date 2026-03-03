@@ -55,7 +55,24 @@ Includes **Authentication**, **real-time tasks**, **Dark Mode**, and **Localizat
 ---
 
 ## 📸 Screenshots
-![Image](https://github.com/user-attachments/assets/81589b84-96a3-427b-8e15-2023c2a0ccb6)![Image](https://github.com/user-attachments/assets/557e8a73-3d6d-4b36-8f39-ad84ec5f46af)![Image](https://github.com/user-attachments/assets/0ca1ab3c-9526-49f2-9de3-1e27f9fc5ffa)
+
+<p align="center">
+  <img src="assets/screens/screen1.jpeg" width="width="220""/>
+  <img src="assets/screens/screen2.jpeg" width="220"/>
+  <img src="assets/screens/screen3.jpeg" width="220"/>
+</p>
+
+<p align="center">
+  <img src="assets/screens/screen4.jpeg" width="220"/>
+  <img src="assets/screens/screen5.jpeg" width="220"/>
+  <img src="assets/screens/screen6.jpeg" width="220"/>
+</p>
+
+<p align="center">
+  <img src="assets/screens/screen7.jpeg" width="220"/>
+  <img src="assets/screens/screen8.jpeg" width="220"/>
+  <img src="assets/screens/screen9.jpeg" width="220"/>
+</p>
 
 ---
 
